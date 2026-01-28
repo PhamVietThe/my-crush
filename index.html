@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Em có thích anh không?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fff0f3;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-align: center;
+        }
+
+        #main-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 85%;
+        }
+
+        h1 {
+            color: #ff4d6d;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .gif-display {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .gif-display img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        #yes-btn {
+            background-color: #ff4d6d;
+            color: white;
+            font-weight: bold;
+        }
+
+        #no-btn {
+            background-color: #dee2e6;
+            color: #495057;
+        }
+
+        #yes-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-card">
+        <h1 id="title-text">Em có thích anh không?</h1>
+        
+        <div class="gif-display">
+            <img id="display-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpndWp6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6JmNoPTEwODAmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Asking GIF">
+        </div>
+
+        <div class="btn-group" id="controls">
+            <button id="yes-btn">Có ❤️</button>
+            <button id="no-btn">Không...</button>
+        </div>
+    </div>
+
+    <audio id="heart-music" loop preload="auto">
+        <source src="https://storage.filebin.net/filebin/314c81d19a213dd59c8f1eb2e83b615d0aa6a30e460510f6e816f67e9e308b8d?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=GK352fd2505074fc9dde7fd2cb%2F20260128%2Fhel1-dc4%2Fs3%2Faws4_request&X-Amz-Date=20260128T173014Z&X-Amz-Expires=7200&X-Amz-SignedHeaders=host%3Bx-forwarded-for&response-cache-control=max-age%3D7200&response-content-disposition=inline%3B%20filename%3D%22ctmeou.mp3.mp3%22&response-content-type=audio%2Fmpeg&x-id=GetObject&X-Amz-Signature=3616f8c1da80e320b45cc14424c3c553edb0939f3811ae92e99923b5964e4a16" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const displayImg = document.getElementById('display-gif');
+        const titleText = document.getElementById('title-text');
+        const controls = document.getElementById('controls');
+        const music = document.getElementById('heart-music');
+
+        const gifArray = [
+            "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExazJyeG9pejFjb3plbW53N3hpbmdlbXMyeTNyNTZ0eGs4YzN4dWNmMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rgq4Sar77s85W/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bXBubnR4a2VtMWFic3ZhaW8xMWI2OGlhNXRnOW1ucnM3Z3l5djh3OSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/y4PQTcLTYJwOI/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnBpd29xem4yenNvc29oaXlla3ZuMWxkaG0wY2wxZm5tMHNycm1kNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/K3Sbp8fOgKye4/giphy.gif",
+            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjg1d29qN2dzYTB4ZGVuYXBjN3lreG5veW9jMGYyNDJwNnBqaDU2cSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QsZol42CPIjMzke1QW/giphy.gif"
+        ];
+
+        // --- NO BUTTON ACTION ---
+        noBtn.addEventListener('click', () => {
+            alert("Lựa chọn này không khả dụng đâu nhé! 😉");
+        });
+
+        // --- YES BUTTON ACTION ---
+        yesBtn.addEventListener('click', () => {
+            // 1. Play Music
+            music.play().catch(err => console.log("Audio play blocked: ", err));
+
+            // 2. Change UI
+            titleText.innerText = "Yayy! Anh cũng thế! 🥰";
+            controls.style.display = "none";
+
+            // 3. Start GIF Loop
+            let currentIndex = 0;
+            const changeGif = () => {
+                displayImg.src = gifArray[currentIndex];
+                currentIndex = (currentIndex + 1) % gifArray.length;
+            };
+
+            changeGif(); // First change
+            setInterval(changeGif, 3000); // Repeat every 3 seconds
+        });
+    </script>
+</body>
+</html>

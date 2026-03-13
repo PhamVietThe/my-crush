@@ -4,93 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Em có thích anh không?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #fff0f3;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe0e9 0%, #fff0f3 50%, #ffd6e7 100%);
+            font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
             text-align: center;
+            overflow: hidden;
+            position: relative;
         }
 
+        /* Floating hearts background */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .heart-float {
+            position: absolute;
+            bottom: -60px;
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 0.7; }
+            50%  { opacity: 0.5; }
+            100% { transform: translateY(-110vh) rotate(360deg) scale(0.5); opacity: 0; }
+        }
+
+        /* Main card */
         #main-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 85%;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            padding: 2rem 2rem 1.8rem;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.18), 0 4px 15px rgba(0,0,0,0.08);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+            animation: cardEntrance 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(40px) scale(0.9); }
+            to   { opacity: 1; transform: translateY(0)   scale(1);   }
         }
 
         h1 {
             color: #ff4d6d;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.55rem;
+            font-weight: 800;
+            margin: 0 0 18px;
+            line-height: 1.3;
+            text-shadow: 0 2px 8px rgba(255, 77, 109, 0.15);
+            animation: pulse-title 2s ease-in-out infinite;
         }
 
+        @keyframes pulse-title {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.04); }
+        }
+
+        /* GIF display */
         .gif-display {
             width: 100%;
-            height: 200px;
+            height: 210px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff5f7;
         }
 
         .gif-display img {
             max-width: 100%;
             max-height: 100%;
-            border-radius: 10px;
+            border-radius: 12px;
+            transition: opacity 0.5s ease;
+            object-fit: contain;
         }
 
+        .gif-display img.fading {
+            opacity: 0;
+        }
+
+        /* Buttons */
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            position: relative;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 1rem;
+            padding: 13px 30px;
+            font-size: 1.05rem;
+            font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+            font-weight: 700;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+            white-space: nowrap;
         }
 
         #yes-btn {
-            background-color: #ff4d6d;
+            background: linear-gradient(135deg, #ff4d6d, #ff758c);
             color: white;
-            font-weight: bold;
+            font-weight: 800;
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14%       { transform: scale(1.07); }
+            28%       { transform: scale(1); }
+            42%       { transform: scale(1.05); }
+            70%       { transform: scale(1); }
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 10px 28px rgba(255, 77, 109, 0.5);
+            animation: none;
+        }
+
+        #yes-btn:active {
+            transform: scale(0.95) !important;
         }
 
         #no-btn {
             background-color: #dee2e6;
             color: #495057;
+            position: absolute;
         }
 
-        #yes-btn:active {
-            transform: scale(0.95);
+        #no-btn:hover {
+            background-color: #ced4da;
+        }
+
+        /* No-button size grows with clicks (so yes btn looks more appealing) */
+        #yes-btn.big { font-size: 1.2rem; padding: 16px 36px; }
+
+        /* Confetti canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* No-click counter */
+        #no-count-msg {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 10px;
+            min-height: 1.2em;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            h1 { font-size: 1.25rem; }
+            #main-card { padding: 1.5rem 1.2rem 1.4rem; }
+            .gif-display { height: 180px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Floating hearts background -->
+    <div class="hearts-container" id="hearts-bg"></div>
+
+    <canvas id="confetti-canvas"></canvas>
+
     <div id="main-card">
-        <h1 id="title-text">Em có thích anh không?</h1>
-        
+        <h1 id="title-text">Em có thích anh không? 💕</h1>
+
         <div class="gif-display">
-            <img id="display-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpndWp6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6JmNoPTEwODAmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Asking GIF">
+            <img id="display-gif" src="https://media1.giphy.com/media/rgq4Sar77s85W/giphy.gif" alt="Animated character expressing romantic feelings">
         </div>
 
         <div class="btn-group" id="controls">
             <button id="yes-btn">Có ❤️</button>
             <button id="no-btn">Không...</button>
         </div>
+        <p id="no-count-msg"></p>
     </div>
 
     <audio id="heart-music" loop preload="auto">
@@ -98,47 +224,161 @@
     </audio>
 
     <script>
-        const yesBtn = document.getElementById('yes-btn');
-        const noBtn = document.getElementById('no-btn');
-        const displayImg = document.getElementById('display-gif');
-        const titleText = document.getElementById('title-text');
-        const controls = document.getElementById('controls');
-        const music = document.getElementById('heart-music');
+        // ── Elements ──────────────────────────────────────────────────────────
+        const yesBtn      = document.getElementById('yes-btn');
+        const noBtn       = document.getElementById('no-btn');
+        const displayImg  = document.getElementById('display-gif');
+        const titleText   = document.getElementById('title-text');
+        const controls    = document.getElementById('controls');
+        const music       = document.getElementById('heart-music');
+        const noCountMsg  = document.getElementById('no-count-msg');
+        const heartsBg    = document.getElementById('hearts-bg');
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx         = confettiCanvas.getContext('2d');
 
+        // ── GIF list ─────────────────────────────────────────────────────────
         const gifArray = [
-            "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExazJyeG9pejFjb3plbW53N3hpbmdlbXMyeTNyNTZ0eGs4YzN4dWNmMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rgq4Sar77s85W/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bXBubnR4a2VtMWFic3ZhaW8xMWI2OGlhNXRnOW1ucnM3Z3l5djh3OSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/y4PQTcLTYJwOI/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnBpd29xem4yenNvc29oaXlla3ZuMWxkaG0wY2wxZm5tMHNycm1kNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/K3Sbp8fOgKye4/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjg1d29qN2dzYTB4ZGVuYXBjN3lreG5veW9jMGYyNDJwNnBqaDU2cSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QsZol42CPIjMzke1QW/giphy.gif"
+            "https://media1.giphy.com/media/rgq4Sar77s85W/giphy.gif",
+            "https://media.giphy.com/media/y4PQTcLTYJwOI/giphy.gif",
+            "https://media.giphy.com/media/K3Sbp8fOgKye4/giphy.gif",
+            "https://media.giphy.com/media/QsZol42CPIjMzke1QW/giphy.gif",
+            "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"
         ];
 
-        // --- NO BUTTON ACTION ---
+        // ── Floating hearts background ────────────────────────────────────────
+        const heartEmojis = ['❤️','💕','💗','💖','💝','🌸','✨'];
+        function spawnHeart() {
+            const el = document.createElement('span');
+            el.className = 'heart-float';
+            el.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            el.style.left    = Math.random() * 100 + 'vw';
+            el.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+            const dur = 6 + Math.random() * 8;
+            el.style.animationDuration = dur + 's';
+            el.style.animationDelay    = Math.random() * dur + 's';
+            heartsBg.appendChild(el);
+            setTimeout(() => el.remove(), dur * 2000);
+        }
+        for (let i = 0; i < 14; i++) spawnHeart();
+        setInterval(spawnHeart, 1200);
+
+        // ── "No" button — runs away ───────────────────────────────────────────
+        let noClickCount = 0;
+        const noTaunts = [
+            "Không phải lựa chọn hợp lệ 😏",
+            "Thử lại đi em~ 💕",
+            "Chắc em nhầm rồi 🙈",
+            "Anh nghĩ em muốn bấm nút kia 👀",
+            "Nút đó đang trốn em kìa 🏃",
+            "Em không thể bắt được nút này đâu~ 😜",
+            "Kiên nhẫn lên nào! ❤️",
+            "Chỉ có một lựa chọn đúng thôi 😇"
+        ];
+
+        function moveNoBtn() {
+            const card = document.getElementById('main-card');
+            const cardRect = card.getBoundingClientRect();
+            const btnRect  = noBtn.getBoundingClientRect();
+            const maxX = cardRect.width  - btnRect.width  - 10;
+            const maxY = cardRect.height - btnRect.height - 10;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top  = randomY + 'px';
+        }
+
+        // Position relative to card on first hover/touch
+        noBtn.addEventListener('mouseenter', moveNoBtn);
+        noBtn.addEventListener('touchend', (e) => { e.preventDefault(); moveNoBtn(); }, { passive: false });
+
         noBtn.addEventListener('click', () => {
-            alert("Lựa chọn này không khả dụng đâu nhé! 😉");
+            noClickCount++;
+            noCountMsg.textContent = noTaunts[Math.min(noClickCount - 1, noTaunts.length - 1)];
+            // Grow the yes button slightly each time no is clicked
+            if (noClickCount >= 3) yesBtn.classList.add('big');
+            moveNoBtn();
         });
 
-        // --- YES BUTTON ACTION ---
-        yesBtn.addEventListener('click', () => {
-            // 1. Play Music
-            music.play().catch(err => console.log("Audio play blocked: ", err));
-
-            // 2. Change UI
-            titleText.innerText = "Yayy! Anh cũng thế! 🥰";
-            controls.style.display = "none";
-
-            // 3. Start GIF Loop
-            let currentIndex = 0;
-            const changeGif = () => {
+        // ── GIF cross-fade helper ─────────────────────────────────────────────
+        let currentIndex = 0;
+        function changeGif() {
+            displayImg.classList.add('fading');
+            setTimeout(() => {
                 displayImg.src = gifArray[currentIndex];
                 currentIndex = (currentIndex + 1) % gifArray.length;
-            };
+                displayImg.classList.remove('fading');
+            }, 500);
+        }
 
-            changeGif(); // First change
-            setInterval(changeGif, 3000); // Repeat every 3 seconds
+        // ── Confetti ──────────────────────────────────────────────────────────
+        let confettiParticles = [];
+        let confettiRunning   = false;
+
+        function resizeCanvas() {
+            confettiCanvas.width  = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function launchConfetti() {
+            confettiRunning = true;
+            const colors = ['#ff4d6d','#ff758c','#ffb3c1','#ff85a1','#ff0a54','#ffd6e7','#c77dff'];
+            for (let i = 0; i < 140; i++) {
+                confettiParticles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    r: 4 + Math.random() * 7,
+                    d: 1 + Math.random() * 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    tilt: Math.floor(Math.random() * 10) - 10,
+                    tiltAngle: 0,
+                    tiltSpeed: 0.1 + Math.random() * 0.15,
+                    shape: Math.random() > 0.5 ? 'circle' : 'rect'
+                });
+            }
+            requestAnimationFrame(drawConfetti);
+        }
+
+        function drawConfetti() {
+            if (!confettiRunning) return;
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            confettiParticles.forEach(p => {
+                ctx.save();
+                ctx.beginPath();
+                ctx.fillStyle = p.color;
+                if (p.shape === 'circle') {
+                    ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+                } else {
+                    ctx.rect(p.x, p.y, p.r * 2, p.r * 0.8);
+                }
+                ctx.fill();
+                ctx.restore();
+                p.y += p.d + 1.5;
+                p.x += Math.sin(p.tiltAngle) * 1.5;
+                p.tiltAngle += p.tiltSpeed;
+                p.tilt = Math.sin(p.tiltAngle) * 12;
+            });
+            confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 20);
+            if (confettiParticles.length > 0) requestAnimationFrame(drawConfetti);
+            else { confettiRunning = false; ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); }
+        }
+
+        // ── YES button ────────────────────────────────────────────────────────
+        yesBtn.addEventListener('click', () => {
+            music.play().catch(err => console.log("Audio play blocked:", err));
+
+            titleText.innerText = "Yayy! Anh cũng thế! 🥰";
+            controls.style.display = "none";
+            noCountMsg.style.display = "none";
+
+            launchConfetti();
+
+            changeGif();
+            setInterval(changeGif, 3500);
         });
     </script>
 </body>
-
 </html>
 
 

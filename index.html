@@ -4,91 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Em có thích anh không?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #fff0f3;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe0e9 0%, #fff0f3 50%, #ffd6e0 100%);
+            font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
             text-align: center;
+            overflow: hidden;
         }
 
+        /* Floating hearts background */
+        .hearts-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart-float {
+            position: absolute;
+            bottom: -50px;
+            font-size: 1.5rem;
+            animation: floatUp linear infinite;
+            opacity: 0;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0%   { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            80%  { opacity: 0.4; }
+            100% { transform: translateY(-110vh) rotate(30deg); opacity: 0; }
+        }
+
+        /* Main card */
         #main-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 85%;
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            padding: 2rem 2rem 1.8rem;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.18), 0 4px 15px rgba(0,0,0,0.08);
+            max-width: 420px;
+            width: 88%;
+            animation: cardIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: scale(0.8) translateY(30px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         h1 {
             color: #ff4d6d;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin: 0 0 18px;
+            line-height: 1.4;
+            transition: all 0.4s ease;
         }
 
+        /* GIF area */
         .gif-display {
             width: 100%;
             height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff0f3;
         }
 
         .gif-display img {
             max-width: 100%;
             max-height: 100%;
-            border-radius: 10px;
+            border-radius: 12px;
+            transition: opacity 0.5s ease;
+            object-fit: cover;
         }
 
+        .gif-display img.fade-out {
+            opacity: 0;
+        }
+
+        /* Buttons */
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 14px;
+            flex-wrap: wrap;
         }
 
         button {
-            padding: 12px 25px;
+            padding: 13px 30px;
             font-size: 1rem;
+            font-family: 'Quicksand', 'Segoe UI', Arial, sans-serif;
+            font-weight: 700;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+            outline: none;
         }
 
         #yes-btn {
-            background-color: #ff4d6d;
+            background: linear-gradient(135deg, #ff4d6d, #ff758c);
             color: white;
-            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
         }
 
-        #no-btn {
-            background-color: #dee2e6;
-            color: #495057;
+        #yes-btn:hover {
+            transform: scale(1.07) translateY(-2px);
+            box-shadow: 0 10px 28px rgba(255, 77, 109, 0.5);
         }
 
         #yes-btn:active {
             transform: scale(0.95);
         }
+
+        #no-btn {
+            background-color: #e9ecef;
+            color: #6c757d;
+            /* position switches to absolute on first dodge */
+        }
+
+        #no-btn:hover {
+            background-color: #dee2e6;
+        }
+
+        /* Confetti particle */
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Pulse animation for yes button */
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 6px 20px rgba(255,77,109,0.4); }
+            50%       { box-shadow: 0 6px 30px rgba(255,77,109,0.75); }
+        }
+
+        #yes-btn.pulse {
+            animation: pulse 1.2s ease-in-out infinite;
+        }
     </style>
 </head>
 <body>
 
+    <!-- Floating hearts background -->
+    <div class="hearts-bg" id="hearts-bg"></div>
+
     <div id="main-card">
-        <h1 id="title-text">Em có thích anh không?</h1>
-        
+        <h1 id="title-text">Em có thích anh không? 🥺</h1>
+
         <div class="gif-display">
-            <img id="display-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpndWp6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6Z2Z6JmNoPTEwODAmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Asking GIF">
+            <img id="display-gif" src="https://media.giphy.com/media/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Asking GIF">
         </div>
 
         <div class="btn-group" id="controls">
-            <button id="yes-btn">Có ❤️</button>
+            <button id="yes-btn" class="pulse">Có ❤️</button>
             <button id="no-btn">Không...</button>
         </div>
     </div>
@@ -98,47 +196,130 @@
     </audio>
 
     <script>
+        // ---- Elements ----
         const yesBtn = document.getElementById('yes-btn');
-        const noBtn = document.getElementById('no-btn');
+        const noBtn  = document.getElementById('no-btn');
         const displayImg = document.getElementById('display-gif');
-        const titleText = document.getElementById('title-text');
-        const controls = document.getElementById('controls');
-        const music = document.getElementById('heart-music');
+        const titleText  = document.getElementById('title-text');
+        const controls   = document.getElementById('controls');
+        const music      = document.getElementById('heart-music');
+        const heartsBg   = document.getElementById('hearts-bg');
 
+        // ---- Floating hearts background ----
+        const heartEmojis = ['❤️', '🧡', '💛', '💚', '💙', '💜', '🩷', '🩵'];
+        function spawnHeart() {
+            const el = document.createElement('span');
+            el.className = 'heart-float';
+            el.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            const duration = 6 + Math.random() * 8;
+            el.style.animationDuration = duration + 's';
+            el.style.fontSize = (0.9 + Math.random() * 1.4) + 'rem';
+            el.style.animationDelay = (Math.random() * 3) + 's';
+            heartsBg.appendChild(el);
+            setTimeout(() => el.remove(), (duration + 3) * 1000);
+        }
+        setInterval(spawnHeart, 700);
+        for (let i = 0; i < 8; i++) spawnHeart();
+
+        // ---- GIFs ----
         const gifArray = [
-            "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExazJyeG9pejFjb3plbW53N3hpbmdlbXMyeTNyNTZ0eGs4YzN4dWNmMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rgq4Sar77s85W/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3bXBubnR4a2VtMWFic3ZhaW8xMWI2OGlhNXRnOW1ucnM3Z3l5djh3OSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/y4PQTcLTYJwOI/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnBpd29xem4yenNvc29oaXlla3ZuMWxkaG0wY2wxZm5tMHNycm1kNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/K3Sbp8fOgKye4/giphy.gif",
-            "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNjg1d29qN2dzYTB4ZGVuYXBjN3lreG5veW9jMGYyNDJwNnBqaDU2cSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QsZol42CPIjMzke1QW/giphy.gif"
+            "https://media1.giphy.com/media/rgq4Sar77s85W/giphy.gif",
+            "https://media.giphy.com/media/y4PQTcLTYJwOI/giphy.gif",
+            "https://media.giphy.com/media/K3Sbp8fOgKye4/giphy.gif",
+            "https://media.giphy.com/media/QsZol42CPIjMzke1QW/giphy.gif"
         ];
 
-        // --- NO BUTTON ACTION ---
-        noBtn.addEventListener('click', () => {
-            alert("Lựa chọn này không khả dụng đâu nhé! 😉");
+        // ---- NO button dodge on hover/touchend ----
+        let noDodgeCount = 0;
+        function dodgeNoBtn() {
+            if (noDodgeCount >= 20) {
+                noBtn.style.display = 'none';
+                return;
+            }
+            const card = document.getElementById('main-card');
+            const cardRect = card.getBoundingClientRect();
+
+            // On first dodge, anchor the button absolutely within the card
+            if (noDodgeCount === 0) {
+                const btnRect = noBtn.getBoundingClientRect();
+                noBtn.style.position = 'absolute';
+                noBtn.style.left = (btnRect.left - cardRect.left) + 'px';
+                noBtn.style.top  = (btnRect.top  - cardRect.top)  + 'px';
+            }
+
+            const btnW = noBtn.offsetWidth;
+            const btnH = noBtn.offsetHeight;
+            const maxX = cardRect.width  - btnW  - 10;
+            const maxY = cardRect.height - btnH  - 10;
+            const newX = Math.random() * maxX + 5;
+            const newY = Math.random() * maxY + 5;
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top  = newY + 'px';
+            noDodgeCount++;
+        }
+
+        noBtn.addEventListener('mouseenter', dodgeNoBtn);
+        noBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            dodgeNoBtn();
         });
 
-        // --- YES BUTTON ACTION ---
+        // Click fallback just in case they catch it
+        noBtn.addEventListener('click', () => {
+            dodgeNoBtn();
+        });
+
+        // ---- Confetti burst ----
+        const confettiColors = ['#ff4d6d','#ff758c','#ffb3c1','#ffd6e0','#ff9ebc','#c77dff','#ffd166'];
+        function launchConfetti() {
+            for (let i = 0; i < 80; i++) {
+                const el = document.createElement('div');
+                el.className = 'confetti';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                el.style.width  = (6 + Math.random() * 8) + 'px';
+                el.style.height = (6 + Math.random() * 8) + 'px';
+                el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                const dur = 1.5 + Math.random() * 2.5;
+                el.style.animationDuration = dur + 's';
+                el.style.animationDelay    = (Math.random() * 0.8) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), (dur + 1.5) * 1000);
+            }
+        }
+
+        // ---- YES button ----
+        let yesClicked = false;
         yesBtn.addEventListener('click', () => {
-            // 1. Play Music
-            music.play().catch(err => console.log("Audio play blocked: ", err));
+            if (yesClicked) return;
+            yesClicked = true;
+            // Play music
+            music.play().catch(err => console.log("Audio play blocked:", err));
 
-            // 2. Change UI
-            titleText.innerText = "Yayy! Anh cũng thế! 🥰";
-            controls.style.display = "none";
+            // Update UI
+            titleText.innerText = "Yayy! Anh cũng thích em! 🥰💕";
+            yesBtn.classList.remove('pulse');
+            controls.style.display = 'none';
 
-            // 3. Start GIF Loop
+            // Confetti
+            launchConfetti();
+
+            // Cycle GIFs with fade transition
             let currentIndex = 0;
             const changeGif = () => {
-                displayImg.src = gifArray[currentIndex];
-                currentIndex = (currentIndex + 1) % gifArray.length;
+                displayImg.classList.add('fade-out');
+                setTimeout(() => {
+                    displayImg.src = gifArray[currentIndex];
+                    currentIndex = (currentIndex + 1) % gifArray.length;
+                    displayImg.classList.remove('fade-out');
+                }, 500);
             };
-
-            changeGif(); // First change
-            setInterval(changeGif, 3000); // Repeat every 3 seconds
+            changeGif();
+            setInterval(changeGif, 3500);
         });
     </script>
 </body>
-
 </html>
 
 
